@@ -23,6 +23,7 @@ El formulario envía los datos al backend y muestra feedback de éxito o error.
 - Bootstrap 5 para estilos
 - Reactive Forms para el formulario
 - HttpClient para la comunicación con el backend
+- URL base del backend tomada desde environment.apiUrl
 - Servicio dedicado `ProjectService` en `src/app/services/`
 
 ## Criterios de aceptación
@@ -37,3 +38,7 @@ El formulario envía los datos al backend y muestra feedback de éxito o error.
 - Dado que el backend devuelve 409,
   cuando el nombre ya existe,
   entonces ve un mensaje de error indicando que el nombre está duplicado.
+
+## Prompt utilizado
+- Agente: Claude (claude.ai)
+- El prompt principal está documentado en la conversación de desarrollo.

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export type ProjectStatus = 'PLANNED' | 'ACTIVE' | 'CLOSED';
 
@@ -34,7 +35,7 @@ export class ProjectService {
   // Angular 21: HttpClient está provisto en el root injector por defecto.
   // No necesitás agregar provideHttpClient() en app.config.ts.
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:8080';
+  private readonly baseUrl = environment.apiUrl;
 
   createProject(payload: CreateProjectRequest): Observable<ProjectResponse> {
     return this.http
