@@ -10,7 +10,6 @@ import { ProjectService, ProjectSummary } from '../../services/project.service';
   templateUrl: './project-summary.component.html',
 })
 export class ProjectSummaryComponent implements OnInit {
-  // inject() es la forma moderna en Angular 17+, reemplaza al constructor
   private route = inject(ActivatedRoute);
   private projectService = inject(ProjectService);
 
@@ -18,10 +17,14 @@ export class ProjectSummaryComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
+  get progressPercentage(): number {
+    if (!this.summary || this.summary.totalTasks === 0) return 0;
+    return (this.summary.doneTasks / this.summary.totalTasks) * 100;
+  }
+
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('projectId');
 
-    // Validamos que el projectId sea un número válido
     if (!idParam || isNaN(Number(idParam))) {
       this.error = 'El ID del proyecto no es válido.';
       return;

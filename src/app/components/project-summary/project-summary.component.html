@@ -51,8 +51,11 @@
           <div
             class="progress-bar bg-success"
             role="progressbar"
-            [style.width.%]="summary.totalTasks > 0 ? (summary.doneTasks / summary.totalTasks) * 100 : 0">
-            {{ summary.totalTasks > 0 ? ((summary.doneTasks / summary.totalTasks) * 100 | number:'1.0-0') : 0 }}%
+            [style.width.%]="progressPercentage"
+            [attr.aria-valuenow]="progressPercentage"
+            aria-valuemin="0"
+            aria-valuemax="100">
+            {{ progressPercentage | number:'1.0-0' }}%
           </div>
         </div>
       </div>
