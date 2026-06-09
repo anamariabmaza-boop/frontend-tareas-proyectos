@@ -6,9 +6,5 @@ export const routes: Routes = [
     path: 'project/:projectId/summary',
     component: ProjectSummaryComponent
   },
-  {
-    path: '',
-    redirectTo: 'project/2/summary',
-    pathMatch: 'full'
-  }
+  { path: '', redirectTo: 'proyectos/crear', pathMatch: 'full' }
 ];
