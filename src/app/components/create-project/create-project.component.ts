@@ -36,7 +36,7 @@ function endDateNotInPast(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-create-project',
   standalone: true,
-  
+  imports: [ReactiveFormsModule],
   templateUrl: './create-project.component.html'
 })
 
