@@ -4,7 +4,6 @@ import {
   signal,
   ChangeDetectorRef
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -37,18 +36,15 @@ function endDateNotInPast(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-create-project',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  
   templateUrl: './create-project.component.html'
 })
+
 export class CreateProjectComponent {
   private readonly fb             = inject(FormBuilder);
   private readonly projectService = inject(ProjectService);
-  // Angular 21 – zoneless: ChangeDetectorRef.markForCheck() es necesario
-  // para que la UI se actualice después de operaciones asíncronas (HTTP)
-  // cuando se usan Reactive Forms, ya que no disparan CD automáticamente.
-  private readonly cdr = inject(ChangeDetectorRef);
+private readonly cdr = inject(ChangeDetectorRef);
 
-  // ── Estados de la UI con Signals (compatibles con zoneless) ───────────────
   isLoading       = signal(false);
   successMsg      = signal('');
   errorMsg        = signal('');
