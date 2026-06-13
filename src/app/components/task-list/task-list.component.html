@@ -91,7 +91,7 @@
             Usamos task.id como track porque es el identificador único del backend.
             Nunca uses el índice ($index) como track si los datos pueden reordenarse.
           -->
-          @for (task of tasks(); track task.id) {
+          @for (task of tasks(); track task.id ?? $index) {
             <tr>
               <td>{{ task.id }}</td>
               <td>{{ task.title }}</td>
