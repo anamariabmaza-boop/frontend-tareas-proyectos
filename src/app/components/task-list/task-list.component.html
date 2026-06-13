@@ -1,0 +1,131 @@
+<!-- ========================================================
+  task-list.component.html
+
+  Usa sintaxis moderna de Angular 17+:
+    @if  → reemplaza *ngIf
+    @for → reemplaza *ngFor (requiere la cláusula track)
+  NO importar CommonModule.
+======================================================== -->
+
+<div class="container mt-4">
+
+  <!-- Encabezado + selector de estado -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h4 mb-0">Tareas del Proyecto #{{ projectId }}</h2>
+
+    <!--
+      (change) es un event binding: escucha el evento nativo 'change' del <select>
+      y llama a onStatusChange() pasándole el objeto $event.
+    -->
+    <select
+      class="form-select w-auto"
+      (change)="onStatusChange($event)"
+    >
+      <!--
+        @for es la nueva sintaxis de bucle. 'track' es OBLIGATORIO:
+        le dice a Angular cómo identificar cada elemento para actualizar
+        solo lo que cambió (mejora el rendimiento).
+        Usamos option.value porque es único.
+      -->
+      @for (option of statusOptions; track option.value) {
+        <option
+          [value]="option.value"
+          [selected]="option.value === selectedStatus()"
+        >
+          {{ option.label }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <!-- Estado: cargando -->
+  <!--
+    @if evalúa la expresión. loading() invoca el signal (siempre con paréntesis).
+    Si es true, muestra el spinner.
+  -->
+  @if (loading()) {
+    <div class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  }
+
+  <!-- Estado: error -->
+  @if (errorMessage()) {
+    <div class="alert alert-danger" role="alert">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- Estado: sin datos -->
+  <!--
+    Mostramos el mensaje vacío solo cuando:
+    - No está cargando
+    - No hay error
+    - El array de tareas está vacío
+  -->
+  @if (!loading() && !errorMessage() && tasks().length === 0) {
+    <div class="alert alert-info" role="status">
+      No hay tareas en este estado.
+    </div>
+  }
+
+  <!-- Estado: tabla con datos -->
+  @if (tasks().length > 0) {
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Título</th>
+            <th scope="col">Responsable</th>
+            <th scope="col">Horas estimadas</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Finalizada</th>
+            <th scope="col">Creada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+            Usamos task.id como track porque es el identificador único del backend.
+            Nunca uses el índice ($index) como track si los datos pueden reordenarse.
+          -->
+          @for (task of tasks(); track task.id ?? $index) {
+            <tr>
+              <td>{{ task.id }}</td>
+              <td>{{ task.title }}</td>
+              <td>{{ task.assignee }}</td>
+              <td>{{ task.estimateHours }} hs</td>
+
+              <!-- Badge de color según el estado -->
+              <td>
+                @if (task.status === 'TODO') {
+                  <span class="badge bg-secondary">Pendiente</span>
+                }
+                @if (task.status === 'IN_PROGRESS') {
+                  <span class="badge bg-warning text-dark">En progreso</span>
+                }
+                @if (task.status === 'DONE') {
+                  <span class="badge bg-success">Completada</span>
+                }
+              </td>
+
+              <!-- finishedAt puede ser null si la tarea no está terminada -->
+              <td>
+                @if (task.finishedAt) {
+                  {{ task.finishedAt | date: 'dd/MM/yyyy' }}
+                } @else {
+                  <span class="text-muted">—</span>
+                }
+              </td>
+
+              <td>{{ task.createdAt | date: 'dd/MM/yyyy' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+</div>

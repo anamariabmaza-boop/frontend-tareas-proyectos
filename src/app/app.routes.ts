@@ -1,14 +1,7 @@
 import { Routes } from '@angular/router';
-import { CreateProjectComponent } from './components/create-project/create-project.component';
+import { TaskListComponent } from './components/task-list/task-list.component';
 
 export const routes: Routes = [
-  {
-    path: 'proyectos/crear',
-    component: CreateProjectComponent
-  },
-  {
-    path: '',
-    redirectTo: 'proyectos/crear',
-    pathMatch: 'full'
-  }
+  { path: 'project/:projectId/tasks', component: TaskListComponent },
+  { path: '', redirectTo: 'project/2/tasks', pathMatch: 'full' }
 ];
