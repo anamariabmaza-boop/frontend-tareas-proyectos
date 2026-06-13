@@ -1,20 +1,14 @@
 import { Routes } from '@angular/router';
-import { ProjectSummaryComponent } from './components/project-summary/project-summary.component';
-import { CreateTaskComponent } from './components/create-task/create-task.component';
+import { CreateProjectComponent } from './components/create-project/create-project.component';
 
 export const routes: Routes = [
   {
-    path: 'project/:projectId/summary',
-    component: ProjectSummaryComponent
-  },
-  {
-    path: 'projects/:projectId/tasks/create',
-    component: CreateTaskComponent
+    path: 'proyectos/crear',
+    component: CreateProjectComponent
   },
   {
     path: '',
     redirectTo: 'proyectos/crear',
     pathMatch: 'full'
   }
-
 ];
