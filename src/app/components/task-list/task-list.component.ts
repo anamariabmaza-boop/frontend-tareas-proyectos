@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Task, TaskService, TaskStatus } from '../../services/task.service';
+import { Task, TaskError, TaskService, TaskStatus } from '../../services/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -46,15 +46,9 @@ export class TaskListComponent implements OnInit {
         this.tasks.set(data);
         this.loading.set(false);
       },
-      error: (err: {status: number}) => {
+      error: (err: TaskError) => {
         this.loading.set(false);
-        if (err.status === 404) {
-          this.errorMessage.set('Proyecto no encontrado.');
-        } else if (err.status === 400) {
-          this.errorMessage.set('Estado de tarea inválido.');
-        } else {
-          this.errorMessage.set('Ocurrió un error al cargar las tareas.');
-        }
+        this.errorMessage.set(err.message);
       },
     });
   }
