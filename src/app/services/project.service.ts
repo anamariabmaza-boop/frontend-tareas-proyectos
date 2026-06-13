@@ -8,8 +8,8 @@ export type ProjectStatus = 'PLANNED' | 'ACTIVE' | 'CLOSED';
 
 export interface CreateProjectRequest {
   name: string;
-  startDate: string;   // formato ISO: 'YYYY-MM-DD'
-  endDate: string;     // formato ISO: 'YYYY-MM-DD'
+  startDate: string;
+  endDate: string;
   status: ProjectStatus;
   description?: string;
 }
@@ -28,12 +28,16 @@ export interface ProjectApiError {
   message: string;
 }
 
+export interface ProjectSummary {
+  totalTasks: number;
+  doneTasks: number;
+  totalEstimateHours: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
-  // Angular 21: HttpClient está provisto en el root injector por defecto.
-  // No necesitás agregar provideHttpClient() en app.config.ts.
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiUrl;
 
@@ -43,26 +47,30 @@ export class ProjectService {
       .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let apiError: ProjectApiError;
+  getSummary(projectId: number): Observable<ProjectSummary> {
+    return this.http
+      .get<ProjectSummary>(`${this.baseUrl}/project/${projectId}/summary`)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
 
+  private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.status === 409) {
-      apiError = {
+      return throwError(() => ({
         type: 'DUPLICATE_NAME',
         message: 'Ya existe un proyecto con ese nombre. Por favor, elige otro.'
-      };
-    } else if (error.status === 400) {
-      apiError = {
-        type: 'INVALID_DATA',
-        message: 'Los datos enviados son inválidos. Revisá el formulario.'
-      };
-    } else {
-      apiError = {
-        type: 'UNKNOWN',
-        message: 'Ocurrió un error inesperado. Intentá de nuevo más tarde.'
-      };
+      }));
     }
 
-    return throwError(() => apiError);
+    if (error.status === 400) {
+      return throwError(() => ({
+        type: 'INVALID_DATA',
+        message: 'Los datos enviados son inválidos. Revisá el formulario.'
+      }));
+    }
+
+    return throwError(() => ({
+      type: 'UNKNOWN',
+      message: 'Ocurrió un error inesperado. Intentá de nuevo más tarde.'
+    }));
   }
 }
