@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface ProjectSummary {
@@ -10,20 +9,19 @@ export interface ProjectSummary {
   totalEstimateHours: number;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProjectService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
+  private http = inject(HttpClient);
 
   getSummary(projectId: number): Observable<ProjectSummary> {
-    return this.http
-      .get<ProjectSummary>(`${this.baseUrl}/project/${projectId}/summary`)
-      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+    return this.http.get<ProjectSummary>(
+      `${environment.apiUrl}/project/${projectId}/summary`
+    );
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    return throwError(() => ({ status: error.status }));
+  exportTasks(projectId: number): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/project/${projectId}/tasks/export`
+    );
   }
 }

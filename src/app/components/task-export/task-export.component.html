@@ -1,0 +1,37 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Exportar Tareas a CSV</h5>
+    </div>
+    <div class="card-body">
+      <p class="text-muted">
+        Descargá todas las tareas del proyecto <strong>#{{ projectId }}</strong> en formato CSV.
+      </p>
+
+      @if (errorMessage()) {
+        <div class="alert alert-danger" role="alert">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="alert alert-success" role="alert">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <button
+        class="btn btn-success"
+        (click)="exportTasks()"
+        [disabled]="loading()"
+      >
+        @if (loading()) {
+          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          Exportando...
+        } @else {
+          Exportar CSV
+        }
+      </button>
+    </div>
+  </div>
+</div>
