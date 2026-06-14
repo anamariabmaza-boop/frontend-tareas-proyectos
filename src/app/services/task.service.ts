@@ -1,23 +1,18 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-export interface CreateTaskRequest {
-  title: string;
-  estimateHours: number;
-  assignee?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
-}
+export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
 
-export interface TaskResponse {
+export interface Task {
   id: number;
   title: string;
   estimateHours: number;
-  assignee?: string;
-  status: 'TODO' | 'IN_PROGRESS' | 'DONE';
-  finishedAt?: string;
+  assignee: string;
+  status: TaskStatus;
+  finishedAt: string | null;
   createdAt: string;
 }
 
@@ -26,36 +21,31 @@ export interface TaskError {
   message: string;
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class TaskService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
-  createTask(
-    projectId: number,
-    task: CreateTaskRequest
-  ): Observable<TaskResponse> {
+  getTasksByStatus(projectId: number, status: TaskStatus): Observable<Task[]> {
+    const params = new HttpParams().set('status', status);
     return this.http
-      .post<TaskResponse>(`${this.baseUrl}/project/${projectId}/task`, task)
-      .pipe(catchError(this.handleError));
+      .get<Task[]>(`${this.apiUrl}/project/${projectId}/tasks`, { params })
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
-    let message = 'Ocurrió un error inesperado.';
+    let taskError: TaskError;
 
-    if (error.status === 400) {
-      message = 'Datos inválidos. Revisá los campos del formulario.';
-    } else if (error.status === 404) {
-      message = 'Proyecto no encontrado.';
-    } else if (error.status === 409) {
-      message =
-        'No se pueden agregar tareas: el proyecto está CERRADO (CLOSED).';
+    if (error.status === 404) {
+      taskError = { status: 404, message: 'Proyecto no encontrado.' };
+    } else if (error.status === 400) {
+      taskError = { status: 400, message: 'Estado de tarea inválido.' };
     } else if (error.status === 0) {
-      message = 'No se pudo conectar con el servidor. Verificá que el backend esté corriendo.';
+      taskError = { status: 0, message: 'No se pudo conectar con el servidor.' };
+    } else {
+      taskError = { status: error.status, message: 'Ocurrió un error al cargar las tareas.' };
     }
 
-    return throwError(() => ({ status: error.status, message } as TaskError));
+    return throwError(() => taskError);
   }
 }
