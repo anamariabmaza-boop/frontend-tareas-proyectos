@@ -24,13 +24,13 @@ export interface CreateTaskRequest {
 }
 
 export interface TaskResponse {
-  id: number;
+  idTask: number;
   title: string;
   estimateHours: number;
   assignee?: string;
   status: TaskStatus;
   finishedAt?: string;
-  createdAt: string;
+  createdAt: string | null;
 }
 
 export interface TaskError {
