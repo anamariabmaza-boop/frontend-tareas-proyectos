@@ -1,0 +1,64 @@
+<div class="container py-4">
+  <h2 class="mb-4">Resumen del proyecto</h2>
+
+  @if (loading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2 text-muted">Cargando resumen...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+  }
+
+  @if (summary) {
+    <div class="row g-4">
+      <div class="col-sm-4">
+        <div class="card text-center shadow-sm h-100">
+          <div class="card-body">
+            <p class="card-title text-muted mb-1">Total de tareas</p>
+            <p class="display-5 fw-semibold mb-0">{{ summary.totalTask }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="card text-center shadow-sm h-100 border-success">
+          <div class="card-body">
+            <p class="card-title text-muted mb-1">Tareas completadas</p>
+            <p class="display-5 fw-semibold text-success mb-0">{{ summary.doneTask }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="card text-center shadow-sm h-100 border-info">
+          <div class="card-body">
+            <p class="card-title text-muted mb-1">Horas estimadas</p>
+            <p class="display-5 fw-semibold text-info mb-0">{{ summary.totalEstimateHours }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 mt-2">
+        <p class="text-muted mb-1">Progreso</p>
+        <div class="progress" style="height: 20px;">
+          <div
+            class="progress-bar bg-success"
+            role="progressbar"
+            [style.width.%]="progressPercentage"
+            [attr.aria-valuenow]="progressPercentage"
+            aria-valuemin="0"
+            aria-valuemax="100">
+            {{ progressPercentage | number:'1.0-0' }}%
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

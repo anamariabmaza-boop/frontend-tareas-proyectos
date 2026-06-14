@@ -1,0 +1,144 @@
+<div class="container py-4" style="max-width: 640px;">
+
+  <!-- Encabezado -->
+  <div class="mb-4">
+    <h2 class="fw-bold mb-1">Nueva Tarea</h2>
+    <p class="text-muted mb-0">
+      Proyecto <strong>#{{ projectId }}</strong>
+    </p>
+  </div>
+
+  <!-- Alerta de éxito -->
+  @if (successMessage) {
+    <div class="alert alert-success d-flex align-items-start gap-2" role="alert">
+      <span>✅</span>
+      <div>
+        <strong>{{ successMessage }}</strong>
+        @if (createdTask) {
+  <ul class="mb-0 mt-1 small">
+    <li>ID: {{ createdTask.idTask }}</li>
+    <li>Estado: {{ createdTask.status }}</li>
+    @if (createdTask.createdAt) {
+      <li>Creada: {{ createdTask.createdAt | date: 'dd/MM/yyyy HH:mm' }}</li>
+    } @else {
+      <li>Creada: <span class="text-muted">No disponible</span></li>
+    }
+  </ul>
+}
+      </div>
+    </div>
+  }
+
+  <!-- Alerta de error -->
+  @if (errorMessage) {
+    <div class="alert alert-danger d-flex align-items-center gap-2" role="alert">
+      <span>❌</span>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
+  <!-- Formulario -->
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <!-- Título -->
+    <div class="mb-3">
+      <label for="title" class="form-label fw-semibold">
+        Título <span class="text-danger">*</span>
+      </label>
+      <input
+        id="title"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="title.invalid && title.touched"
+        [class.is-valid]="title.valid && title.touched"
+        formControlName="title"
+        placeholder="Ej: Diseñar pantalla de login"
+      />
+      <div class="invalid-feedback">
+        @if (title.errors?.['required']) { El título es obligatorio. }
+        @else if (title.errors?.['minlength']) { Mínimo 3 caracteres. }
+        @else if (title.errors?.['maxlength']) { Máximo 100 caracteres. }
+      </div>
+    </div>
+
+    <!-- Horas estimadas -->
+    <div class="mb-3">
+      <label for="estimateHours" class="form-label fw-semibold">
+        Horas estimadas <span class="text-danger">*</span>
+      </label>
+      <input
+        id="estimateHours"
+        type="number"
+        step="0.5"
+        min="0.1"
+        class="form-control"
+        [class.is-invalid]="estimateHours.invalid && estimateHours.touched"
+        [class.is-valid]="estimateHours.valid && estimateHours.touched"
+        formControlName="estimateHours"
+        placeholder="Ej: 4"
+      />
+      <div class="invalid-feedback">
+        @if (estimateHours.errors?.['required']) { Las horas son obligatorias. }
+        @else if (estimateHours.errors?.['min']) { Debe ser mayor a 0. }
+      </div>
+    </div>
+
+    <!-- Responsable -->
+    <div class="mb-3">
+      <label for="assignee" class="form-label fw-semibold">
+        Responsable <span class="text-muted fw-normal">(opcional)</span>
+      </label>
+      <input
+        id="assignee"
+        type="text"
+        class="form-control"
+        formControlName="assignee"
+        placeholder="Ej: María García"
+      />
+    </div>
+
+    <!-- Estado -->
+    <div class="mb-4">
+      <label for="status" class="form-label fw-semibold">
+        Estado <span class="text-danger">*</span>
+      </label>
+      <select
+        id="status"
+        class="form-select"
+        [class.is-invalid]="status.invalid && status.touched"
+        formControlName="status"
+      >
+        @for (option of statusOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+      <div class="invalid-feedback">Seleccioná un estado.</div>
+    </div>
+
+    <!-- Botones -->
+    <div class="d-flex gap-2">
+      <button
+        type="submit"
+        class="btn btn-primary px-4"
+        [disabled]="isLoading"
+      >
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Creando...
+        } @else {
+          Crear tarea
+        }
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        [disabled]="isLoading"
+        (click)="onReset()"
+      >
+        Limpiar
+      </button>
+    </div>
+
+  </form>
+</div>
