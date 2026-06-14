@@ -34,12 +34,10 @@ export interface ProjectSummary {
   totalEstimateHours: number;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ProjectService {
-  private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiUrl;
+  private http = inject(HttpClient);
+  private baseUrl = environment.apiUrl;
 
   createProject(payload: CreateProjectRequest): Observable<ProjectResponse> {
     return this.http
@@ -48,9 +46,15 @@ export class ProjectService {
   }
 
   getSummary(projectId: number): Observable<ProjectSummary> {
-    return this.http
-      .get<ProjectSummary>(`${this.baseUrl}/project/${projectId}/summary`)
-      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+    return this.http.get<ProjectSummary>(
+      `${this.baseUrl}/project/${projectId}/summary`
+    );
+  }
+
+  exportTasks(projectId: number): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${this.baseUrl}/project/${projectId}/tasks/export`
+    );
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
@@ -60,14 +64,12 @@ export class ProjectService {
         message: 'Ya existe un proyecto con ese nombre. Por favor, elige otro.'
       }));
     }
-
     if (error.status === 400) {
       return throwError(() => ({
         type: 'INVALID_DATA',
         message: 'Los datos enviados son inválidos. Revisá el formulario.'
       }));
     }
-
     return throwError(() => ({
       type: 'UNKNOWN',
       message: 'Ocurrió un error inesperado. Intentá de nuevo más tarde.'
