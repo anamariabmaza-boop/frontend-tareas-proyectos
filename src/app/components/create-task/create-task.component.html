@@ -15,12 +15,16 @@
       <div>
         <strong>{{ successMessage }}</strong>
         @if (createdTask) {
-          <ul class="mb-0 mt-1 small">
-            <li>ID: {{ createdTask.id }}</li>
-            <li>Estado: {{ createdTask.status }}</li>
-            <li>Creada: {{ createdTask.createdAt | date: 'dd/MM/yyyy HH:mm' }}</li>
-          </ul>
-        }
+  <ul class="mb-0 mt-1 small">
+    <li>ID: {{ createdTask.idTask }}</li>
+    <li>Estado: {{ createdTask.status }}</li>
+    @if (createdTask.createdAt) {
+      <li>Creada: {{ createdTask.createdAt | date: 'dd/MM/yyyy HH:mm' }}</li>
+    } @else {
+      <li>Creada: <span class="text-muted">No disponible</span></li>
+    }
+  </ul>
+}
       </div>
     </div>
   }

@@ -18,8 +18,8 @@ export class ProjectSummaryComponent implements OnInit {
   error: string | null = null;
 
   get progressPercentage(): number {
-    if (!this.summary || this.summary.totalTasks === 0) return 0;
-    return (this.summary.doneTasks / this.summary.totalTasks) * 100;
+    if (!this.summary || this.summary.totalTask === 0) return 0;
+    return (this.summary.doneTask / this.summary.totalTask) * 100;
   }
 
   ngOnInit(): void {

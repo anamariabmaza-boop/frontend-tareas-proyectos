@@ -1,0 +1,88 @@
+<div class="container py-4">
+  <h2 class="mb-4">Funcionalidades del Sistema</h2>
+
+  <div class="row g-3">
+    <!-- Crear Proyecto -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Crear Proyecto</h5>
+          <p class="card-text text-muted">Crear un nuevo proyecto con sus datos.</p>
+          <a routerLink="/proyectos/crear" class="btn btn-primary">Ir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crear Tarea -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Crear Tarea</h5>
+          <p class="card-text text-muted">Crear una tarea dentro de un proyecto.</p>
+          <label class="form-label small">ID del proyecto</label>
+          <input
+            type="number"
+            class="form-control mb-2"
+            [value]="taskProjectId()"
+            (input)="onIdChange($event, taskProjectId)"
+          />
+          <a [routerLink]="'/project/' + taskProjectId() + '/tasks/create'" class="btn btn-primary">Ir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumen -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Resumen del Proyecto</h5>
+          <p class="card-text text-muted">Ver estadísticas de un proyecto.</p>
+          <label class="form-label small">ID del proyecto</label>
+          <input
+            type="number"
+            class="form-control mb-2"
+            [value]="summaryProjectId()"
+            (input)="onIdChange($event, summaryProjectId)"
+          />
+          <a [routerLink]="'/project/' + summaryProjectId() + '/summary'" class="btn btn-primary">Ir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Listar Tareas -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Listar Tareas por Estado</h5>
+          <p class="card-text text-muted">Ver tareas filtradas por estado.</p>
+          <label class="form-label small">ID del proyecto</label>
+          <input
+            type="number"
+            class="form-control mb-2"
+            [value]="listProjectId()"
+            (input)="onIdChange($event, listProjectId)"
+          />
+          <a [routerLink]="'/project/' + listProjectId() + '/tasks'" class="btn btn-primary">Ir</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exportar CSV -->
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-body">
+          <h5 class="card-title">Exportar Tareas a CSV</h5>
+          <p class="card-text text-muted">Descargar las tareas de un proyecto en CSV.</p>
+          <label class="form-label small">ID del proyecto</label>
+          <input
+            type="number"
+            class="form-control mb-2"
+            [value]="exportProjectId()"
+            (input)="onIdChange($event, exportProjectId)"
+          />
+          <a [routerLink]="'/project/' + exportProjectId() + '/export'" class="btn btn-primary">Ir</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

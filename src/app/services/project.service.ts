@@ -29,8 +29,10 @@ export interface ProjectApiError {
 }
 
 export interface ProjectSummary {
-  totalTasks: number;
-  doneTasks: number;
+  idProject: number;
+  nameProject: string;
+  totalTask: number;
+  doneTask: number;
   totalEstimateHours: number;
 }
 
